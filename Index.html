@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Initialising...</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+    :root {
+      --primary-color: #6a11cb;
+      --secondary-color: #2575fc;
+      --text-color: #f0f0f0;
+      --bg-color: #121212;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      height: 100vh;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+
+    .loading-container {
+      text-align: center;
+      opacity: 1;
+      transition: opacity 0.5s ease-out;
+    }
+
+    .loading-container.fade-out {
+      opacity: 0;
+    }
+
+    .typing-text {
+      font-size: 2rem;
+      font-weight: 600;
+      display: inline-block;
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 0.15em solid var(--secondary-color);
+      letter-spacing: .15em;
+      animation:
+        typing 3.5s steps(30, end),
+        blink-caret .75s step-end infinite;
+    }
+
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 100% }
+    }
+
+    @keyframes blink-caret {
+      from, to { border-color: transparent }
+      50% { border-color: var(--secondary-color); }
+    }
+
+    .progress-bar {
+      width: 250px;
+      height: 8px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      margin: 2rem auto 0;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+      border-radius: 4px;
+      animation: fill-progress 4s ease-out forwards;
+    }
+
+    @keyframes fill-progress {
+      from { width: 0%; }
+      to { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="loading-container" id="loadingContainer">
+    <div class="typing-text">Initialising...</div>
+    <div class="progress-bar">
+      <div class="progress-bar-fill"></div>
+    </div>
+  </div>
+
+  <script>
+    // Total time for the loading screen in milliseconds
+    const loadingTime = 4000; 
+
+    // Redirect to the login page after the animation completes
+    setTimeout(() => {
+      const container = document.getElementById('loadingContainer');
+      
+      // Add fade-out effect before redirecting
+      container.classList.add('fade-out');
+      
+      // Wait for the fade-out to finish before changing the page
+      setTimeout(() => {
+        window.location.href = 'login.html';
+      }, 500); // This duration should match the transition time in CSS
+
+    }, loadingTime);
+  </script>
+
+</body>
+</html>
