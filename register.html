@@ -6,71 +6,201 @@
   <title>Register - Attendance System</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
+    :root {
+      --primary-color: #6a11cb;
+      --secondary-color: #2575fc;
+      --text-color: #f0f0f0;
+      --bg-color: #121212;
+      --card-bg: rgba(255,255,255,0.09);
+    }
     body {
       min-height: 100vh;
-      background: #121212;
-      color: #fafafa;
+      background: var(--bg-color);
+      color: var(--text-color);
       font-family: 'Poppins', sans-serif;
-      margin: 0;
       display: flex;
       align-items: center;
       justify-content: center;
+      margin: 0;
+      overflow-x: hidden;
     }
+    /* Animated background blobs with orbiting and pulsing */
+    .motion-background {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      z-index: -1;
+      overflow: hidden;
+    }
+    .shape {
+      position: absolute;
+      border-radius: 50%;
+      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+      filter: blur(120px);
+      opacity: 0.47;
+      pointer-events: none;
+      transition: box-shadow .5s;
+      z-index: -1;
+    }
+    .shape1 { width: 330px; height: 340px; top: -70px; left: -90px; animation: orbit1 18s ease-in-out infinite alternate;}
+    .shape2 { width: 260px; height: 270px; bottom: -70px; right: -80px; animation: orbit2 23s ease-in-out infinite alternate;}
+    .shape3 { width: 170px; height: 190px; top: 55%; left: 53%; animation: orbit3 15s ease-in-out infinite alternate;}
+    @keyframes orbit1 {
+      from { transform: translate(0,0) scale(.99);}
+      50%  { transform: translate(70px,60px) scale(1.05);}
+      80%  { transform: translate(100px,60px) scale(0.98);}
+      to   { transform: translate(90px,110px) scale(1.07);}
+    }
+    @keyframes orbit2 {
+      0%   {transform: translate(0,0) scale(1);}
+      25%  {transform: translate(-40px,40px) scale(.96);}
+      75%  {transform: translate(-99px,-30px) scale(1.08);}
+      100% {transform: translate(-130px,-60px) scale(.94);}
+    }
+    @keyframes orbit3 {
+      0%   {transform: translate(0,0) scale(.94);}
+      48%  {transform: translate(22px,-58px) scale(1.1);}
+      100% {transform: translate(36px,-75px) scale(.98);}
+    }
+    /* Card Styling + motion */
     .glass-card {
-      background: rgba(255,255,255,0.06);
+      background: var(--card-bg);
       border-radius: 2em;
-      padding: 2.5em 2em;
-      box-shadow: 0 18px 38px rgba(0,0,0,0.24);
-      backdrop-filter: blur(16px);
-      border: 1px solid rgba(255,255,255,0.17);
+      padding: 2.7em 2em 2.3em;
+      box-shadow: 0 18px 38px rgba(0,0,0,0.33);
+      backdrop-filter: blur(22px);
+      border: 1.5px solid rgba(255,255,255,0.13);
       width: 340px;
       max-width: 95vw;
       text-align: center;
-      animation: fadeIn 1s ease;
+      animation: cardIn 1.2s cubic-bezier(.52,-0.01,.3,1) forwards, cardFloat 5s ease-in-out infinite alternate;
+      transform: translateY(40px) scale(.95);
+      opacity: 0;
+      position: relative;
     }
-    @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
-    h2 { margin-bottom: 1em; }
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(60px) scale(.92);}
+      to { opacity: 1; transform: translateY(0) scale(1);}
+    }
+    @keyframes cardFloat {
+      0%   { transform: translateY(0) scale(1);}
+      54%  { transform: translateY(-12px) scale(1.01);}
+      100% { transform: translateY(0) scale(1);}
+    }
+    h2 {
+      margin-bottom: 1.1em;
+      letter-spacing: 0.7px;
+      font-weight: 600;
+      font-size: 1.47em;
+      background: linear-gradient(84deg, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    /* Form fields slide/fade-in animation */
     .form-fields {
       display: flex;
       flex-direction: column;
-      gap: 1em;
-      margin-bottom: 1em;
+      gap: 1.15em;
+      margin-bottom: 1.12em;
       align-items: stretch;
+      opacity: 0; transform: translateY(22px);
+      animation: fadeFields .95s .33s cubic-bezier(.4,1.4,.5,1) forwards;
+    }
+    @keyframes fadeFields {
+      to { opacity:1; transform:translateY(0);}
     }
     input {
       width: 100%;
-      padding: 1em;
+      padding: 1.14em;
       border-radius: 1em;
-      border: 1px solid #333;
-      background: rgba(0,0,0,0.14);
+      border: 1.5px solid #262a38;
+      background: rgba(0,0,0,0.18);
       color: #fafafa;
       font-size: 1em;
-      box-sizing: border-box;
-      /* Remove margin-bottom, use gap on .form-fields instead */
       margin: 0;
+      box-sizing: border-box;
+      letter-spacing: 0.02em;
+      transition: border .26s, box-shadow .2s, background .18s;
+      opacity: 0; transform: translateY(10px) scale(.99);
+      animation: fieldIn .58s forwards;
     }
-    input:focus { outline: none; border-color: #2575fc;}
+    input:nth-child(1){animation-delay:.38s;}
+    input:nth-child(2){animation-delay:.48s;}
+    input:nth-child(3){animation-delay:.58s;}
+    input:nth-child(4){animation-delay:.68s;}
+    @keyframes fieldIn {
+      to {opacity:1;transform:translateY(0) scale(1);}
+    }
+    input:focus {
+      outline: none;
+      border-color: var(--secondary-color);
+      box-shadow: 0 0 0 2px #6a11cb2e;
+      background: rgba(36,41,56,0.21);
+    }
     button {
-      width: 100%; padding: 1em; border: none;
-      border-radius: 1em; font-weight: 600; font-size: 1rem;
+      width: 100%;
+      padding: 1em;
+      border: none;
+      border-radius: 1em;
+      font-weight: 600;
+      font-size: 1rem;
       color: #fff;
-      background: linear-gradient(45deg, #2575fc, #6a11cb);
-      cursor: pointer; transition: background 0.2s, transform 0.2s;
-      margin-top: 0.7em;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+      cursor: pointer;
+      transition: background 0.22s, transform 0.11s;
+      margin-top: 0.65em;
+      box-shadow: 0 4px 18px 0 rgba(104,40,194,0.08);
+      position: relative;
+      overflow: hidden;
     }
-    button:active { transform: scale(0.97);}
-    .links { margin-top: 1.7em; }
-    .links a { color: #90caf9; text-decoration: none; margin: 0 0.5em; }
-    .links a:hover { color: #6a11cb; text-decoration: underline; }
-    .success { color:#00e676; margin-top:0.7em; }
-    .error { color:#f44336; margin-top:0.7em;}
+    button:active { transform: scale(0.975);}
+    /* Button ripple effect */
+    button::after {
+      content: "";
+      display: block;
+      position: absolute;
+      left: 50%; top: 50%;
+      width: 0; height: 0;
+      background: rgba(255,255,255, .28);
+      border-radius: 100%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: width .37s ease, height .37s ease, opacity .34s;
+      z-index: 1;
+      pointer-events: none;
+    }
+    button:active::after {
+      width: 260%;
+      height: 420%;
+      opacity: .13;
+      transition: 0s;
+    }
+    .links { margin-top: 1.3em; }
+    .links a { color: #90caf9; text-decoration: none; margin: 0 0.4em; transition: color 0.3s;}
+    .links a:hover { color: var(--primary-color); text-decoration: underline;}
+    .success { color:#00e676; margin-top:0.8em; }
+    .error { color:#f44336; margin-top:0.8em;}
+    .glass-card:before {
+      content: "";
+      position: absolute; inset: 0;
+      border-radius: inherit;
+      box-shadow: 0 8px 32px 0 rgba(55,36,194,0.13);
+      pointer-events: none;
+      opacity: 0.12;
+    }
     @media (max-width: 400px) {
       .glass-card { padding: 1.3em 0.3em; }
-      h2 { font-size: 1.36em; }
+      h2 { font-size: 1.1em; }
     }
   </style>
 </head>
 <body>
+  <div class="motion-background">
+    <div class="shape shape1"></div>
+    <div class="shape shape2"></div>
+    <div class="shape shape3"></div>
+  </div>
   <div class="glass-card">
     <h2>Create Account</h2>
     <form id="registerForm" autocomplete="off">
@@ -90,17 +220,19 @@
   <script>
     document.getElementById('registerForm').onsubmit = function(e) {
       e.preventDefault();
-      const pass = document.getElementById('regPass').value;
-      const pass2 = document.getElementById('regPass2').value;
+      const pass = document.getElementById('regPass').value.trim();
+      const pass2 = document.getElementById('regPass2').value.trim();
       const msg = document.getElementById('msg');
       if (pass !== pass2) {
         msg.textContent = "Passwords do not match!";
         msg.className = "error";
+      } else if (pass.length < 6) {
+        msg.textContent = "Password should be at least 6 characters!";
+        msg.className = "error";
       } else {
         msg.textContent = "Registration successful!";
         msg.className = "success";
-        // Normally, send data to backend here!
-        setTimeout(()=>window.location.href="login.html",1500);
+        setTimeout(()=>window.location.href="login.html",1400);
       }
     }
   </script>
