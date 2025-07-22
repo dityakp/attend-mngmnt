@@ -28,7 +28,8 @@
       animation: fadeIn 1s ease;
     }
     @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
-    h2 { margin-bottom: .8em;}
+    h2 { margin-bottom: .2em;}
+    #email { margin-bottom: .7em; color: #b0bec5; font-size: 0.98em;}
     .today-date {
       color: #90caf9;
       margin-bottom: 1.2em;
@@ -73,6 +74,7 @@
       font-size: 0.95em;
       text-decoration: none;
       transition: color 0.2s;
+      cursor: pointer;
     }
     .logout-link:hover { color: #6a11cb; }
     @media (max-width: 600px) {
@@ -84,7 +86,8 @@
 </head>
 <body>
   <div class="glass-card">
-    <h2>Welcome, Manager Priya!</h2>
+    <h2 id="greeting">Welcome, Manager!</h2>
+    <div id="email"></div>
     <div class="today-date" id="today"></div>
     <table>
       <thead>
@@ -99,14 +102,36 @@
         <!-- Populated by JS -->
       </tbody>
     </table>
-    <a href="login.html" class="logout-link">← Log out</a>
+    <a href="#" class="logout-link" id="logoutBtn">← Log out</a>
   </div>
   <script>
     // Set today's date
     document.getElementById('today').textContent =
       "Today: " + new Date().toLocaleDateString();
 
-    // Example employee data
+    // Show manager name and email from localStorage, check role
+    function showManagerGreeting() {
+      const userJSON = localStorage.getItem('user');
+      if (userJSON) {
+        try {
+          const user = JSON.parse(userJSON);
+          if (user.role !== 'manager') { // Not a manager, redirect
+            window.location.replace('login.html');
+            return;
+          }
+          document.getElementById('greeting').textContent = `Welcome, Manager ${user.name || ''}!`;
+          document.getElementById('email').textContent = user.email ? `Email: ${user.email}` : '';
+        } catch(e) {
+          localStorage.removeItem('user');
+          window.location.replace('login.html');
+        }
+      } else {
+        window.location.replace('login.html');
+      }
+    }
+    showManagerGreeting();
+
+    // Example employee data — in a real app, fetch this from an API
     const employees = [
       {name: "John Doe", avatar:"https://randomuser.me/api/portraits/men/32.jpg"},
       {name: "Anita Sharma", avatar:"https://randomuser.me/api/portraits/women/44.jpg"},
@@ -147,6 +172,14 @@
       document.getElementById(`status-${idx}`).textContent +=
         " | OUT at "+new Date().toLocaleTimeString();
     }
+
+    // Log out: remove localStorage and redirect
+    document.getElementById('logoutBtn').onclick = function(e) {
+      e.preventDefault();
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+      window.location.href = 'login.html';
+    };
   </script>
 </body>
 </html>
