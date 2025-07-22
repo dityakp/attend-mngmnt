@@ -69,6 +69,7 @@
       font-size: 0.95em;
       text-decoration: none;
       transition: color 0.2s;
+      cursor: pointer;
     }
     .logout-link:hover { color: #6a11cb; }
     @media (max-width: 500px) {
@@ -79,19 +80,40 @@
 <body>
   <div class="glass-card">
     <img class="avatar" src="https://randomuser.me/api/portraits/men/32.jpg" alt="Your Avatar">
-    <h2>Hello, John Doe!</h2>
+    <h2 id="greeting">Hello!</h2>
+    <p id="email"></p>
     <div class="today-date" id="today"></div>
     <div class="attendance-actions">
       <button id="in-btn">Mark Attendance IN</button>
       <button id="out-btn" disabled>Mark Attendance OUT</button>
     </div>
     <div id="att-status"></div>
-    <a href="login.html" class="logout-link">← Log out</a>
+    <a class="logout-link" href="#" id="logoutBtn">← Log out</a>
   </div>
   <script>
     // Set today's date
     document.getElementById('today').textContent =
       "Today: " + new Date().toLocaleDateString();
+
+    // Set user greeting and email from localStorage
+    function showUserGreeting() {
+      const userJSON = localStorage.getItem('user');
+      if (userJSON) {
+        try {
+          const user = JSON.parse(userJSON);
+          document.getElementById('greeting').textContent = `Hello, ${user.name || 'User'}!`;
+          document.getElementById('email').textContent = user.email ? `Email: ${user.email}` : '';
+        } catch(e) {
+          // If parsing fails, treat as logged out
+          localStorage.removeItem('user');
+          window.location.replace('login.html');
+        }
+      } else {
+        // Not logged in, redirect to login
+        window.location.replace('login.html');
+      }
+    }
+    showUserGreeting();
 
     // Attendance logic for mockup
     const inBtn = document.getElementById('in-btn');
@@ -101,7 +123,7 @@
       inBtn.textContent = "IN Marked ✔";
       inBtn.classList.add('marked');
       inBtn.disabled = true;
-      outBtn.disabled = false; // enable OUT after IN
+      outBtn.disabled = false;
       status.textContent = "Attendance IN marked at " +
         new Date().toLocaleTimeString();
     }
@@ -112,6 +134,14 @@
       status.textContent = "Attendance OUT marked at " +
         new Date().toLocaleTimeString();
     }
+
+    // Log out: remove localStorage and redirect
+    document.getElementById('logoutBtn').onclick = function(e) {
+      e.preventDefault();
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+      window.location.href = 'login.html';
+    };
   </script>
 </body>
 </html>
