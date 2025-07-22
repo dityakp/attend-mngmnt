@@ -1,0 +1,14 @@
+# Ignore node_modules folder
+node_modules/
+
+# Ignore environment files and secrets
+.env
+.env.local
+
+# Ignore log files
+*.log
+npm-debug.log*
+
+# Ignore any file/folder you never want uploaded
+secrets.json
+private-key.pem
